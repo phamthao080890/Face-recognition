@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: face-attendance-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: face_attendance
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./volumes/mongodb:/data/db
+    networks:
+      - face-attendance-network
+
+  qdrant:
+    image: qdrant/qdrant:v1.7.4
+    container_name: face-attendance-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ./volumes/qdrant:/qdrant/storage
+    networks:
+      - face-attendance-network
+
+networks:
+  face-attendance-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+  qdrant-data:
